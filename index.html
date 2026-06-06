@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Loop-You · Vibe Card Generator v3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Loop-You · Vibe Card Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
@@ -12,109 +12,139 @@
   --bg-soft:#1c1a16;
   --bg-card:#1f1d18;
   --line:rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.16);
   --ink:#f5efe4;
   --muted:#9b958a;
   --lime:#c9ff4a;
   --coral:#ff7e6b;
   --terracotta:#d08c68;
-  --safe:rgba(255,126,107,.18);
-  --safe-line:rgba(255,126,107,.6);
+  --safe:rgba(255,126,107,.16);
+  --safe-line:rgba(255,126,107,.55);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;min-height:100vh;overflow-x:hidden}
-body{padding:22px 16px 60px;background:radial-gradient(ellipse at top,#1c1a16 0%,#0f0e0c 60%)}
+html,body{background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;min-height:100vh}
+body{padding:18px 14px 80px;background:radial-gradient(ellipse at top,#1c1a16 0%,#0f0e0c 70%)}
 
-/* Header */
-.header{max-width:560px;margin:0 auto 20px}
-.brand{display:flex;align-items:center;gap:10px}
-.mark{width:30px;height:30px;border-radius:50%;background:linear-gradient(145deg,#E8B795,#D08C68);display:grid;place-items:center;flex:0 0 auto;box-shadow:0 4px 14px rgba(208,140,104,.3)}
-.mark svg{width:30px;height:30px}
-.brand-name{font-size:15px;font-weight:900;letter-spacing:-.02em}
-.brand-sub{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);opacity:.85}
-.version{margin-left:auto;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.1em}
+/* === HEADER === */
+.header{max-width:540px;margin:0 auto 16px;display:flex;align-items:center;gap:10px}
+.mark{width:32px;height:32px;border-radius:50%;background:linear-gradient(145deg,#E8B795,#D08C68);display:grid;place-items:center;flex:0 0 auto;box-shadow:0 4px 14px rgba(208,140,104,.3)}
+.mark svg{width:32px;height:32px}
+.brand-name{font-size:16px;font-weight:900;letter-spacing:-.02em;line-height:1}
+.brand-sub{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);opacity:.85;margin-top:3px}
+.version{margin-left:auto;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em}
 
-/* Format selector — HERO of v3 */
-.format-row{max-width:560px;margin:0 auto 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.format-btn{background:var(--bg-soft);border:1.5px solid var(--line);color:var(--ink);padding:10px 8px;border-radius:14px;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .2s}
-.format-btn:hover{border-color:rgba(201,255,74,.4)}
-.format-btn.on{background:var(--lime);color:var(--bg);border-color:var(--lime)}
-.format-btn small{font-size:9.5px;font-weight:600;opacity:.7;letter-spacing:.04em}
-.format-btn .ic{font-size:18px;line-height:1;margin-bottom:2px}
+/* === FORMAT TABS === */
+.tabs{max-width:540px;margin:0 auto 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--bg-soft);padding:6px;border-radius:16px;border:1px solid var(--line)}
+.tab{background:transparent;border:none;color:var(--muted);padding:10px 6px;border-radius:11px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.01em}
+.tab:hover{color:var(--ink)}
+.tab.on{background:var(--lime);color:var(--bg)}
+.tab small{font-size:9.5px;font-weight:600;opacity:.75;letter-spacing:.04em}
 
-/* Canvas preview */
-.canvas-wrap{max-width:420px;margin:0 auto 14px;position:relative}
-.card-frame{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1c1a16;transition:aspect-ratio .35s}
-.card-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;transition:opacity .4s}
-.card-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .4s}
+/* === PREVIEW === */
+.canvas-wrap{max-width:380px;margin:0 auto 14px;position:relative}
+.card-frame{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);background:#1c1a16;transition:aspect-ratio .35s}
+.card-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;transition:opacity .4s,background-image .4s}
+.card-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;transition:background .4s,opacity .3s}
 
-/* Safe zones overlay (toggleable) */
+/* Safe zones overlay */
 .safe-zones{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .25s}
 .safe-zones.show{opacity:1}
 .safe-zones .safe-top,.safe-zones .safe-bottom{position:absolute;left:0;right:0;background:var(--safe);border-top:1.5px dashed var(--safe-line);border-bottom:1.5px dashed var(--safe-line)}
 .safe-zones .safe-top{top:0;height:15%}
 .safe-zones .safe-bottom{bottom:0;height:25%}
-.safe-zones .safe-label{position:absolute;left:8px;font-size:9.5px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);background:var(--coral);padding:3px 7px;border-radius:6px}
+.safe-zones.tk-mode .safe-bottom{height:30%}
+.safe-zones .safe-label{position:absolute;left:8px;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--coral);padding:3px 7px;border-radius:5px}
 .safe-zones .safe-label.top{top:8px}
 .safe-zones .safe-label.bottom{bottom:8px}
 
-/* Content layers — positioned per format */
+/* === CONTENT LAYERS === */
 .card-content{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;padding:6%}
-.card-top{display:flex;justify-content:space-between;align-items:flex-start}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0}
 .card-loop{font-size:11px;letter-spacing:.22em;font-weight:900;color:#fff;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.55)}
-.card-icon{width:42px;height:42px;background:rgba(255,255,255,.88);border-radius:13px;display:grid;place-items:center;font-size:22px;backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(0,0,0,.2)}
-.card-text{font-weight:900;letter-spacing:-.025em;line-height:1.04;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.5),0 1px 4px rgba(0,0,0,.45);word-break:break-word;white-space:pre-line}
+.card-icon{width:42px;height:42px;background:rgba(255,255,255,.92);border-radius:13px;display:grid;place-items:center;font-size:22px;backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(0,0,0,.2);flex-shrink:0}
+.card-mid{flex:1;display:flex;align-items:center}
+.card-text{font-weight:900;letter-spacing:-.025em;line-height:1.06;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.5),0 1px 4px rgba(0,0,0,.45);white-space:pre-line;word-wrap:break-word}
+.card-foot-wrap{flex-shrink:0}
 .card-foot{font-size:11px;letter-spacing:.2em;font-weight:900;color:#fff;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.55)}
 
-/* Layout variants */
-.layout-feed .card-text{font-size:38px;flex:1;display:flex;align-items:center;padding:18px 0}
-.layout-story .card-text{font-size:42px;margin-top:auto;margin-bottom:auto}
-.layout-tiktok .card-text{font-size:34px;margin-top:auto;padding-bottom:12%}
+/* === Layout variants with safe-zone spacing === */
+.layout-story .card-content{padding-top:18%;padding-bottom:27%}
+.layout-tiktok .card-content{padding-top:14%;padding-bottom:32%}
+.layout-feed .card-content{padding:7%}
 
-/* Spacer for safe-zone-aware layouts */
-.layout-story .card-content,.layout-tiktok .card-content{padding-top:18%;padding-bottom:28%}
-.layout-feed .card-content{padding:8%}
-
-/* Helper line */
-.helper{max-width:420px;margin:0 auto 14px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5;padding:0 4px}
+/* === Helper === */
+.helper{max-width:380px;margin:0 auto 14px;font-size:12px;color:var(--muted);text-align:center;line-height:1.5;padding:0 4px}
 .helper b{color:var(--ink)}
 .helper .coral{color:var(--coral)}
-.helper .lime{color:var(--lime)}
 
-/* Toggle safe zones */
-.toggle-row{max-width:420px;margin:0 auto 18px;display:flex;justify-content:center;gap:8px}
-.toggle{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:99px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+/* === Toggle === */
+.toggle-row{max-width:380px;margin:0 auto 18px;display:flex;justify-content:center;gap:8px}
+.toggle{background:transparent;border:1px solid var(--line);color:var(--muted);padding:7px 14px;border-radius:99px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
 .toggle:hover{color:var(--ink);border-color:var(--lime)}
 .toggle.on{color:var(--coral);border-color:var(--coral)}
 
-/* Controls */
-.controls{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.field{display:flex;flex-direction:column;gap:7px}
-.label{font-size:10.5px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);display:flex;align-items:center;gap:6px}
-.label .hint{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0;text-transform:none;margin-left:auto}
+/* === Controls === */
+.controls{max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:8px}
+.label-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.label{font-size:10.5px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.hint-text{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
 .input,.textarea{width:100%;padding:13px 15px;background:var(--bg-soft);border:1.5px solid var(--line);border-radius:13px;color:var(--ink);font-family:inherit;font-size:15px;transition:border-color .2s,background .2s}
-.textarea{resize:vertical;min-height:56px;font-weight:700;line-height:1.3}
+.textarea{resize:vertical;min-height:90px;font-weight:700;line-height:1.4;white-space:pre-wrap}
 .input:focus,.textarea:focus{outline:none;border-color:var(--lime);background:#1f1d18}
 .input::placeholder,.textarea::placeholder{color:#6f6a60}
 
-/* Picker grids */
-.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+/* === Background source picker === */
+.bg-source-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.bg-source-btn{background:var(--bg-soft);border:1.5px solid var(--line);color:var(--ink);padding:11px 12px;border-radius:12px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.02em}
+.bg-source-btn:hover{border-color:rgba(201,255,74,.5)}
+.bg-source-btn.on{background:var(--lime);color:var(--bg);border-color:var(--lime)}
+
+/* === Pickers === */
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .pick{aspect-ratio:1;border-radius:11px;border:2px solid var(--line);background:var(--bg-soft);cursor:pointer;display:grid;place-items:center;font-size:21px;transition:all .15s}
-.pick:hover{transform:scale(1.04);border-color:rgba(201,255,74,.4)}
+.pick:hover{transform:scale(1.05);border-color:rgba(201,255,74,.4)}
 .pick.on{border-color:var(--lime);transform:scale(1.05);box-shadow:0 6px 18px rgba(201,255,74,.25)}
-.bg-picker{grid-template-columns:repeat(4,1fr);gap:7px}
+.bg-picker{grid-template-columns:repeat(4,1fr);gap:6px}
 .pick-bg{height:56px;border-radius:10px;border:2px solid var(--line);cursor:pointer;background-size:cover;background-position:center;position:relative;transition:all .15s;overflow:hidden}
-.pick-bg:hover{transform:scale(1.02);border-color:rgba(201,255,74,.4)}
+.pick-bg:hover{transform:scale(1.03);border-color:rgba(201,255,74,.4)}
 .pick-bg.on{border-color:var(--lime);box-shadow:0 6px 18px rgba(201,255,74,.3)}
 .pick-bg-label{position:absolute;bottom:3px;left:5px;font-size:8.5px;font-weight:900;letter-spacing:.06em;color:#fff;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 
-/* Quick phrases */
-.quick-row{max-width:560px;margin:0 auto 14px;display:flex;gap:7px;flex-wrap:wrap}
-.quick{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 11px;border-radius:99px;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;transition:all .15s}
+/* === Photo upload === */
+.upload-zone{margin-top:6px;padding:18px;background:var(--bg-soft);border:1.5px dashed var(--line-strong);border-radius:13px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:10px}
+.upload-zone:hover{border-color:var(--lime);background:#1f1d18}
+.upload-zone.has-image{border-style:solid;border-color:var(--lime);background:#1f1d18}
+.upload-icon{font-size:30px;line-height:1}
+.upload-title{font-size:13.5px;font-weight:800;color:var(--ink)}
+.upload-hint{font-size:11px;color:var(--muted);line-height:1.4}
+.upload-preview{display:none;width:100%;align-items:center;gap:10px}
+.upload-preview.show{display:flex}
+.upload-thumb{width:50px;height:50px;border-radius:10px;background-size:cover;background-position:center;flex-shrink:0;border:1px solid var(--line)}
+.upload-info{flex:1;text-align:left;min-width:0}
+.upload-info-name{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upload-info-size{font-size:11px;color:var(--muted);margin-top:2px}
+.upload-clear{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;flex-shrink:0}
+.upload-clear:hover{color:var(--coral);border-color:var(--coral)}
+#fileInput{display:none}
+
+/* === Overlay intensity slider for photos === */
+.overlay-control{margin-top:10px;display:none}
+.overlay-control.show{display:flex;flex-direction:column;gap:6px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;background:var(--bg-soft);border-radius:99px;outline:none;border:1px solid var(--line)}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--lime);border-radius:50%;cursor:pointer;box-shadow:0 2px 6px rgba(201,255,74,.4)}
+.slider::-moz-range-thumb{width:18px;height:18px;background:var(--lime);border-radius:50%;cursor:pointer;border:none}
+.slider-val{font-size:12px;font-weight:800;color:var(--lime);min-width:36px;text-align:right}
+
+/* === Quick phrases === */
+.quick-row{max-width:540px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.quick{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 11px;border-radius:99px;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
 .quick:hover{color:var(--ink);border-color:var(--lime)}
 
-/* Export */
-.export-row{max-width:560px;margin:22px auto 0;display:flex;gap:9px}
-.btn{flex:1;padding:15px;border:none;border-radius:15px;font-family:inherit;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:.01em;transition:transform .2s,box-shadow .2s,opacity .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+/* === Export buttons === */
+.export-row{max-width:540px;margin:24px auto 0;display:flex;gap:9px}
+.btn{flex:1;padding:16px;border:none;border-radius:14px;font-family:inherit;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:.01em;transition:transform .2s,box-shadow .2s,opacity .2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn:not(:disabled):hover{transform:translateY(-2px)}
 .btn.primary{background:var(--lime);color:var(--bg)}
@@ -122,75 +152,92 @@ body{padding:22px 16px 60px;background:radial-gradient(ellipse at top,#1c1a16 0%
 .btn.secondary{background:var(--bg-soft);color:var(--ink);border:1.5px solid var(--line)}
 .btn.secondary:not(:disabled):hover{border-color:var(--lime)}
 
-/* Toast */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(140%);background:var(--lime);color:var(--bg);padding:13px 22px;border-radius:99px;font-weight:900;font-size:14px;box-shadow:0 14px 40px rgba(201,255,74,.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:99}
+/* === Toast === */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(140%);background:var(--lime);color:var(--bg);padding:13px 22px;border-radius:99px;font-weight:900;font-size:14px;box-shadow:0 14px 40px rgba(201,255,74,.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:99;max-width:90vw}
 .toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--coral);color:#fff}
 
-/* Footer */
-.hint{max-width:560px;margin:28px auto 0;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.6}
+/* === Footer === */
+.hint{max-width:540px;margin:28px auto 0;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.6}
 .hint b{color:var(--ink);font-weight:700}
 
-@media(max-width:480px){
-  .canvas-wrap{max-width:340px}
-  .layout-feed .card-text{font-size:32px}
-  .layout-story .card-text{font-size:34px}
-  .layout-tiktok .card-text{font-size:28px}
-  .card-icon{width:38px;height:38px;font-size:20px}
+/* === Responsive === */
+@media(max-width:520px){
+  .canvas-wrap{max-width:320px}
+  .picker{grid-template-columns:repeat(5,1fr)}
+  .bg-picker{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:380px){
+  .tab small{display:none}
 }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
-  <div class="brand">
-    <span class="mark"><svg viewBox="0 0 96 96"><circle cx="38" cy="42" r="4" fill="#fff"/><circle cx="58" cy="42" r="4" fill="#fff"/><path d="M37 56 Q48 63 59 56" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></span>
-    <div>
-      <div class="brand-name">Loop-You</div>
-      <div class="brand-sub">vibe card generator</div>
-    </div>
-    <span class="version">v5 · multiline</span>
+  <div class="mark">
+    <svg viewBox="0 0 96 96">
+      <circle cx="38" cy="42" r="4" fill="#fff"/>
+      <circle cx="58" cy="42" r="4" fill="#fff"/>
+      <path d="M37 56 Q48 63 59 56" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </svg>
   </div>
+  <div>
+    <div class="brand-name">Loop-You</div>
+    <div class="brand-sub">vibe card generator</div>
+  </div>
+  <span class="version">v6 · photo upload</span>
 </div>
 
-<!-- FORMAT SELECTOR -->
-<div class="format-row">
-  <button class="format-btn on" data-format="story" onclick="setFormat('story',this)"><span class="ic">📱</span>Story / Reel<small>1080 × 1920</small></button>
-  <button class="format-btn" data-format="tiktok" onclick="setFormat('tiktok',this)"><span class="ic">🎵</span>TikTok cover<small>1080 × 1920</small></button>
-  <button class="format-btn" data-format="feed" onclick="setFormat('feed',this)"><span class="ic">🟦</span>IG Feed<small>1080 × 1080</small></button>
+<!-- FORMAT TABS -->
+<div class="tabs">
+  <button class="tab on" data-format="story" onclick="setFormat('story',this)">
+    📱 Story / Reel<small>1080 × 1920</small>
+  </button>
+  <button class="tab" data-format="tiktok" onclick="setFormat('tiktok',this)">
+    🎵 TikTok cover<small>1080 × 1920</small>
+  </button>
+  <button class="tab" data-format="feed" onclick="setFormat('feed',this)">
+    🟦 IG Feed<small>1080 × 1080</small>
+  </button>
 </div>
 
-<!-- LIVE PREVIEW -->
+<!-- PREVIEW -->
 <div class="canvas-wrap">
   <div class="card-frame layout-story" id="cardFrame">
     <div class="card-bg" id="cardBg"></div>
     <div class="card-overlay" id="cardOverlay"></div>
-    <!-- Safe zone overlays -->
     <div class="safe-zones" id="safeZones">
       <div class="safe-top"></div>
       <span class="safe-label top">⚠ HIDDEN BY APP UI</span>
       <div class="safe-bottom"></div>
       <span class="safe-label bottom">⚠ COVERED BY CAPTION + BUTTONS</span>
     </div>
-    <!-- Content -->
     <div class="card-content">
       <div class="card-top">
         <span class="card-loop">LOOP-YOU</span>
         <div class="card-icon" id="cardIcon">🌿</div>
       </div>
-      <div class="card-text" id="cardText">your phrase here.</div>
-      <div style="margin-top:auto"><span class="card-foot" id="cardFoot">SOFT RESET</span></div>
+      <div class="card-mid">
+        <div class="card-text" id="cardText">low energy.
+still showed up.</div>
+      </div>
+      <div class="card-foot-wrap">
+        <span class="card-foot" id="cardFoot">SOFT RESET</span>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Format helper -->
 <p class="helper" id="formatHelper">
-  <b>Story / Reel mode:</b> safe-zone aware. Top 15% + bottom 25% are hidden by IG/TikTok UI. <span class="coral">Toggle ⚠ below to see them</span>.
+  <b>Story / Reel mode:</b> safe zones show what's hidden by IG/TikTok UI.
 </p>
 
-<!-- Safe-zone toggle -->
+<!-- Safe toggle -->
 <div class="toggle-row">
-  <button class="toggle on" id="safeToggle" onclick="toggleSafe()">⚠ Show safe zones</button>
+  <button class="toggle on" id="safeToggle" onclick="toggleSafe()">⚠ Hide safe zones</button>
 </div>
 
 <!-- Quick phrases -->
@@ -198,71 +245,102 @@ body{padding:22px 16px 60px;background:radial-gradient(ellipse at top,#1c1a16 0%
 
 <!-- Controls -->
 <div class="controls">
+
   <div class="field">
-    <div class="label">Your phrase <span class="hint">press Enter for new line · lowercase recommended</span></div>
-    <textarea class="textarea" id="phraseInput" placeholder="e.g. low energy.&#10;still showed up." oninput="updatePhrase()" rows="4">low energy.
+    <div class="label-row">
+      <span class="label">Your phrase</span>
+      <span class="hint-text">press Enter for new line</span>
+    </div>
+    <textarea class="textarea" id="phraseInput" placeholder="low energy.&#10;still showed up." oninput="updatePhrase()" rows="4">low energy.
 still showed up.</textarea>
   </div>
+
   <div class="field">
-    <div class="label">Bottom label</div>
-    <input class="input" id="labelInput" placeholder="e.g. SOFT RESET" oninput="updateLabel()" value="SOFT RESET" />
+    <div class="label-row">
+      <span class="label">Bottom label</span>
+      <span class="hint-text">auto uppercase</span>
+    </div>
+    <input class="input" id="labelInput" placeholder="SOFT RESET" oninput="updateLabel()" value="SOFT RESET" />
   </div>
+
   <div class="field">
     <div class="label">Mood icon</div>
     <div class="picker" id="iconPicker"></div>
   </div>
+
   <div class="field">
-    <div class="label">Background vibe</div>
+    <div class="label">Background</div>
+    <div class="bg-source-row">
+      <button class="bg-source-btn on" id="srcPreset" onclick="setSource('preset')">🎨 Preset vibes</button>
+      <button class="bg-source-btn" id="srcPhoto" onclick="setSource('photo')">📷 Upload photo</button>
+    </div>
+    <!-- Preset backgrounds -->
     <div class="picker bg-picker" id="bgPicker"></div>
+    <!-- Photo upload -->
+    <div class="upload-zone" id="uploadZone" style="display:none" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📷</div>
+      <div class="upload-title">Upload your photo</div>
+      <div class="upload-hint">Tap to pick · JPG or PNG · vertical photos work best for Story/Reel</div>
+      <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" />
+      <div class="upload-preview" id="uploadPreview">
+        <div class="upload-thumb" id="uploadThumb"></div>
+        <div class="upload-info">
+          <div class="upload-info-name" id="uploadName">photo.jpg</div>
+          <div class="upload-info-size" id="uploadSize">0 KB</div>
+        </div>
+        <button class="upload-clear" onclick="clearPhoto(event)">Clear</button>
+      </div>
+    </div>
+    <!-- Overlay intensity slider (shown when photo loaded) -->
+    <div class="overlay-control" id="overlayControl">
+      <div class="label-row">
+        <span class="label" style="font-size:10px">Text shadow strength</span>
+        <span class="hint-text">helps text stay readable</span>
+      </div>
+      <div class="slider-row">
+        <input type="range" class="slider" id="overlaySlider" min="0" max="80" value="45" oninput="updateOverlay()" />
+        <span class="slider-val" id="overlayVal">45%</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Export -->
 <div class="export-row">
-  <button class="btn primary" id="dlBtn" onclick="downloadCard()">↓ Download PNG</button>
+  <button class="btn primary" id="dlBtn" onclick="downloadCard()">↓ Download HD PNG</button>
   <button class="btn secondary" onclick="randomize()">🎲 Surprise me</button>
 </div>
 
 <p class="hint">
-  Made for <b>Loop-You</b> · ship one a day · stay consistent 🌿<br>
-  <span style="font-size:10.5px;opacity:.6">v5 fixes: line breaks now work · auto-shrink for long lists · 2x HD export</span>
+  <b>Loop-You · Vibe Card Generator</b> · ship one a day 🌿<br>
+  <span style="font-size:10.5px;opacity:.6">v6 · upload your own photo · multiline · HD export · safe zones</span>
 </p>
 
 <div class="toast" id="toast">✓ Card downloaded</div>
 
 <script>
-// ============== STATE ==============
+// =================== STATE ===================
 const state = {
-  phrase: "low energy. still showed up.",
+  phrase: "low energy.\nstill showed up.",
   label: "SOFT RESET",
   icon: "🌿",
   bg: 0,
-  format: "story", // story | tiktok | feed
-  safeShown: true
+  format: "story",
+  safeShown: true,
+  source: "preset",      // "preset" or "photo"
+  photoDataUrl: null,    // uploaded photo as data URL
+  overlayStrength: 45    // 0-80 percent overlay darkness
 };
 
-// Aspect ratios per format
-const formatRatios = {
-  story:  '9/16',
-  tiktok: '9/16',
-  feed:   '1/1'
-};
-
-// Canvas dimensions per format
-const formatDims = {
-  story:  {w:1080,h:1920},
-  tiktok: {w:1080,h:1920},
-  feed:   {w:1080,h:1080}
-};
-
-// Safe-zone helpers shown only for vertical formats
+const formatRatios = {story:'9/16',tiktok:'9/16',feed:'1/1'};
+const formatDims = {story:{w:1080,h:1920},tiktok:{w:1080,h:1920},feed:{w:1080,h:1080}};
 const formatHelpers = {
-  story:  '<b>Story / Reel mode:</b> safe-zone aware. Top 15% + bottom 25% are hidden by IG UI. <span class="coral">Toggle ⚠ below to see them</span>.',
-  tiktok: '<b>TikTok cover mode:</b> bottom 30% covered by caption + buttons. Keep important content in the middle.',
-  feed:   '<b>IG Feed mode:</b> full canvas usable, no safe zones needed. Square format for grid posts.'
+  story:'<b>Story / Reel mode:</b> safe zones show what IG/TikTok UI hides. Keep text in middle.',
+  tiktok:'<b>TikTok cover mode:</b> bottom 30% covered by buttons. Keep text high.',
+  feed:'<b>IG Feed mode:</b> full canvas usable. Square format for grid posts.'
 };
 
-// ============== BACKGROUNDS ==============
+// =================== BACKGROUNDS ===================
 const backgrounds = [
   {name:"soft reset",grad:"linear-gradient(155deg,#B8E8C2,#4A8A5E)",overlay:"linear-gradient(165deg,rgba(184,232,194,.25),rgba(74,138,94,.5))",
    svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#D4F2DD"/><stop offset="40%" stop-color="#8FD49B"/><stop offset="100%" stop-color="#4A8A5E"/></linearGradient></defs><rect width="600" height="800" fill="url(#g)"/><g opacity="0.5"><path d="M0,720 Q100,650 200,720 Q100,780 0,720 Z" fill="#2D5419"/><path d="M150,750 Q280,680 400,750 Q280,800 150,750 Z" fill="#3A6B22"/><path d="M380,720 Q500,650 600,700 Q600,800 380,800 Z" fill="#2D5419"/></g><g opacity="0.4"><path d="M100,250 Q140,220 180,250 Q140,290 100,250 Z" fill="#3D7A4E" transform="rotate(20 140 250)"/><path d="M450,180 Q490,150 530,180 Q490,220 450,180 Z" fill="#3D7A4E" transform="rotate(-15 490 180)"/></g><circle cx="120" cy="120" r="20" fill="#FFFFFF" opacity="0.25"/><circle cx="380" cy="80" r="15" fill="#FFFFFF" opacity="0.3"/></svg>`},
@@ -279,39 +357,35 @@ const backgrounds = [
   {name:"warm light",grad:"linear-gradient(155deg,#FFE0B5,#E89B4A)",overlay:"linear-gradient(165deg,rgba(255,224,181,.2),rgba(232,155,74,.5))",
    svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FFF0D5"/><stop offset="40%" stop-color="#FFE0B5"/><stop offset="100%" stop-color="#E89B4A"/></linearGradient><radialGradient id="sun" cx="50%" cy="20%" r="50%"><stop offset="0%" stop-color="#FFF8E0" stop-opacity="0.5"/><stop offset="100%" stop-color="#FFF8E0" stop-opacity="0"/></radialGradient></defs><rect width="600" height="800" fill="url(#g)"/><rect width="600" height="800" fill="url(#sun)"/></svg>`},
   {name:"deep night",grad:"linear-gradient(155deg,#2D3B4F,#0F1626)",overlay:"linear-gradient(165deg,rgba(45,59,79,.2),rgba(15,22,38,.55))",
-   svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3D4F66"/><stop offset="40%" stop-color="#2D3B4F"/><stop offset="100%" stop-color="#0F1626"/></linearGradient></defs><rect width="600" height="800" fill="url(#g)"/><circle cx="80" cy="100" r="2" fill="#FFFFFF"/><circle cx="150" cy="150" r="1.5" fill="#FFFFFF"/><circle cx="230" cy="80" r="2.5" fill="#FFFFFF"/><circle cx="320" cy="180" r="1.5" fill="#FFFFFF"/><circle cx="400" cy="100" r="2" fill="#FFFFFF"/><circle cx="500" cy="160" r="2.5" fill="#FFFFFF"/><circle cx="100" cy="250" r="1.5" fill="#FFFFFF"/><circle cx="280" cy="280" r="2" fill="#FFFFFF"/><circle cx="450" cy="180" r="35" fill="#FFFFFF" opacity="0.7"/></svg>`}
+   svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3D4F66"/><stop offset="40%" stop-color="#2D3B4F"/><stop offset="100%" stop-color="#0F1626"/></linearGradient></defs><rect width="600" height="800" fill="url(#g)"/><circle cx="80" cy="100" r="2" fill="#FFFFFF"/><circle cx="150" cy="150" r="1.5" fill="#FFFFFF"/><circle cx="230" cy="80" r="2.5" fill="#FFFFFF"/><circle cx="320" cy="180" r="1.5" fill="#FFFFFF"/><circle cx="400" cy="100" r="2" fill="#FFFFFF"/><circle cx="500" cy="160" r="2.5" fill="#FFFFFF"/><circle cx="100" cy="250" r="1.5" fill="#FFFFFF"/><circle cx="450" cy="180" r="35" fill="#FFFFFF" opacity="0.7"/></svg>`}
 ];
 
-// ============== ICONS ==============
 const icons = ["🌿","🏃","🧘","🏋️","☕","📚","🌧️","⚡","🎧","🧴","💪","🌙","☀️","💚","🔥","✨","🥗","💆","🚶","🌸"];
 
-// ============== QUICK PHRASES — lowercase, brand-voice ==============
+// Quick phrases with line break support (use \n for line breaks)
 const quickPhrases = [
-  {label: "low energy.", text: "low energy.\nstill showed up."},
-  {label: "quick pump.", text: "quick pump.\nno guilt."},
-  {label: "rainy walk.", text: "rainy walk.\ncalmer head."},
-  {label: "22 mins.", text: "22 mins.\nfeeling lighter."},
-  {label: "rest day.", text: "rest day.\non purpose."},
-  {label: "soft monday.", text: "soft monday.\nsoft mood."},
-  {label: "tired but trying.", text: "tired\nbut trying.\nthat counts."},
-  {label: "lecture day.", text: "lecture day.\nsurvived."},
-  {label: "today's loop ↓", text: "today's loop:\n\n· 20-min walk\n· high-protein lunch\n· spf + water\n· sleep by 11:30"},
-  {label: "monday loop", text: "monday loop:\n\n· slow start\n· lecture at 10\n· gym at 6\n· chill night"},
-  {label: "what's your loop.", text: "what's your\nloop today."},
-  {label: "day 1.", text: "day 1.\nbuilding loop-you."}
+  {label:"low energy.",text:"low energy.\nstill showed up."},
+  {label:"quick pump.",text:"quick pump.\nno guilt."},
+  {label:"rainy walk.",text:"rainy walk.\ncalmer head."},
+  {label:"22 mins.",text:"22 mins.\nfeeling lighter."},
+  {label:"rest day.",text:"rest day.\non purpose."},
+  {label:"today's loop ↓",text:"today's loop:\n\n· walk\n· protein lunch\n· focus 1hr\n· sleep early"},
+  {label:"monday loop",text:"monday loop:\n\n· slow start\n· lecture 10am\n· gym 6pm\n· chill night"},
+  {label:"day 1.",text:"day 1.\nbuilding loop-you."},
+  {label:"what's your loop.",text:"what's your\nloop today."}
 ];
 
-// ============== INIT ==============
+// =================== INIT ===================
 function init(){
   // Icons
-  const ip = document.getElementById('iconPicker');
+  const ip=document.getElementById('iconPicker');
   icons.forEach(icon=>{
     const b=document.createElement('button');b.className='pick'+(icon===state.icon?' on':'');b.textContent=icon;
     b.onclick=()=>{state.icon=icon;document.querySelectorAll('#iconPicker .pick').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
     ip.appendChild(b);
   });
   // Backgrounds
-  const bp = document.getElementById('bgPicker');
+  const bp=document.getElementById('bgPicker');
   backgrounds.forEach((bg,i)=>{
     const b=document.createElement('button');b.className='pick-bg'+(i===state.bg?' on':'');b.style.background=bg.grad;
     b.onclick=()=>{state.bg=i;document.querySelectorAll('#bgPicker .pick-bg').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
@@ -321,58 +395,141 @@ function init(){
   // Quick phrases
   const qr=document.getElementById('quickRow');
   quickPhrases.forEach(p=>{
-    const b=document.createElement('button');b.className='quick';b.textContent='"'+p.label+'"';
+    const b=document.createElement('button');b.className='quick';b.textContent=p.label;
     b.onclick=()=>{state.phrase=p.text;document.getElementById('phraseInput').value=p.text;render();};
     qr.appendChild(b);
   });
   render();
 }
 
-// ============== UPDATERS ==============
-function updatePhrase(){ state.phrase=document.getElementById('phraseInput').value||'your phrase here.';render();}
-function updateLabel(){ state.label=(document.getElementById('labelInput').value||'VIBE').toUpperCase();render();}
+// =================== UPDATERS ===================
+function updatePhrase(){state.phrase=document.getElementById('phraseInput').value||'your phrase here.';render();}
+function updateLabel(){state.label=(document.getElementById('labelInput').value||'VIBE').toUpperCase();render();}
+
 function setFormat(f,btn){
   state.format=f;
-  document.querySelectorAll('.format-btn').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
   btn.classList.add('on');
   const frame=document.getElementById('cardFrame');
   frame.style.aspectRatio=formatRatios[f];
   frame.classList.remove('layout-story','layout-tiktok','layout-feed');
   frame.classList.add('layout-'+f);
-  document.getElementById('formatHelper').innerHTML=formatHelpers[f];
-  // Show safe zones only for vertical formats
   const safe=document.getElementById('safeZones');
-  if(f==='feed'){safe.classList.remove('show');document.getElementById('safeToggle').style.display='none';}
-  else{document.getElementById('safeToggle').style.display='flex';if(state.safeShown)safe.classList.add('show');}
+  safe.classList.toggle('tk-mode',f==='tiktok');
+  document.getElementById('formatHelper').innerHTML=formatHelpers[f];
+  if(f==='feed'){
+    safe.classList.remove('show');
+    document.getElementById('safeToggle').style.display='none';
+  }else{
+    document.getElementById('safeToggle').style.display='flex';
+    if(state.safeShown)safe.classList.add('show');
+  }
   render();
 }
+
 function toggleSafe(){
   state.safeShown=!state.safeShown;
-  const t=document.getElementById('safeToggle');const safe=document.getElementById('safeZones');
+  const t=document.getElementById('safeToggle');
+  const safe=document.getElementById('safeZones');
   if(state.safeShown){safe.classList.add('show');t.classList.add('on');t.textContent='⚠ Hide safe zones';}
   else{safe.classList.remove('show');t.classList.remove('on');t.textContent='⚠ Show safe zones';}
 }
 
+function setSource(src){
+  state.source=src;
+  document.getElementById('srcPreset').classList.toggle('on',src==='preset');
+  document.getElementById('srcPhoto').classList.toggle('on',src==='photo');
+  document.getElementById('bgPicker').style.display=src==='preset'?'grid':'none';
+  document.getElementById('uploadZone').style.display=src==='photo'?'flex':'none';
+  document.getElementById('overlayControl').classList.toggle('show',src==='photo'&&state.photoDataUrl);
+  render();
+}
+
+function handleFileUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  // Validate
+  if(!file.type.startsWith('image/')){showToast('⚠️ Please pick an image file',true);return;}
+  if(file.size>10*1024*1024){showToast('⚠️ Image too large (max 10MB)',true);return;}
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    state.photoDataUrl=ev.target.result;
+    // Show preview
+    const zone=document.getElementById('uploadZone');
+    zone.classList.add('has-image');
+    // Hide upload prompt, show preview
+    document.querySelector('.upload-icon').style.display='none';
+    document.querySelector('.upload-title').style.display='none';
+    document.querySelector('.upload-hint').style.display='none';
+    const prev=document.getElementById('uploadPreview');
+    prev.classList.add('show');
+    document.getElementById('uploadThumb').style.backgroundImage='url("'+ev.target.result+'")';
+    document.getElementById('uploadName').textContent=file.name;
+    document.getElementById('uploadSize').textContent=formatBytes(file.size);
+    // Show overlay control
+    document.getElementById('overlayControl').classList.add('show');
+    render();
+    showToast('✓ Photo loaded');
+  };
+  reader.onerror=function(){showToast('⚠️ Failed to load photo',true);};
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto(e){
+  e.stopPropagation();
+  state.photoDataUrl=null;
+  document.getElementById('fileInput').value='';
+  const zone=document.getElementById('uploadZone');
+  zone.classList.remove('has-image');
+  document.querySelector('.upload-icon').style.display='block';
+  document.querySelector('.upload-title').style.display='block';
+  document.querySelector('.upload-hint').style.display='block';
+  document.getElementById('uploadPreview').classList.remove('show');
+  document.getElementById('overlayControl').classList.remove('show');
+  render();
+}
+
+function updateOverlay(){
+  state.overlayStrength=parseInt(document.getElementById('overlaySlider').value);
+  document.getElementById('overlayVal').textContent=state.overlayStrength+'%';
+  render();
+}
+
+function formatBytes(b){
+  if(b<1024)return b+' B';
+  if(b<1024*1024)return Math.round(b/1024)+' KB';
+  return (b/(1024*1024)).toFixed(1)+' MB';
+}
+
+// =================== RENDER ===================
 function render(){
-  const bg=backgrounds[state.bg];
-  const svgEncoded=encodeURIComponent(bg.svg);
-  document.getElementById('cardBg').style.backgroundImage=`url("data:image/svg+xml;utf8,${svgEncoded}")`;
-  document.getElementById('cardOverlay').style.background=bg.overlay;
+  const bgEl=document.getElementById('cardBg');
+  const overlayEl=document.getElementById('cardOverlay');
+  
+  if(state.source==='photo'&&state.photoDataUrl){
+    bgEl.style.backgroundImage='url("'+state.photoDataUrl+'")';
+    // Stronger overlay for photo readability
+    const o=state.overlayStrength/100;
+    overlayEl.style.background=`linear-gradient(180deg, rgba(0,0,0,${o*0.3}) 0%, rgba(0,0,0,${o*0.7}) 100%)`;
+  }else{
+    const bg=backgrounds[state.bg];
+    const svgEncoded=encodeURIComponent(bg.svg);
+    bgEl.style.backgroundImage=`url("data:image/svg+xml;utf8,${svgEncoded}")`;
+    overlayEl.style.background=bg.overlay;
+  }
+  
   document.getElementById('cardIcon').textContent=state.icon;
   const ct=document.getElementById('cardText');
   ct.textContent=state.phrase;
   document.getElementById('cardFoot').textContent=state.label;
-  // Auto-shrink preview font based on line count
-  const lineCount=state.phrase.split('\n').length;
-  let previewSize;
-  if(state.format==='feed'){
-    previewSize=lineCount<=2?38:lineCount===3?32:lineCount===4?26:lineCount===5?22:18;
-  }else if(state.format==='story'){
-    previewSize=lineCount<=2?42:lineCount===3?34:lineCount===4?28:lineCount===5?24:20;
-  }else{
-    previewSize=lineCount<=2?34:lineCount===3?28:lineCount===4?23:lineCount===5?20:17;
-  }
-  ct.style.fontSize=previewSize+'px';
+  
+  // Auto-shrink preview font based on line count (split by \n)
+  const lineCount=Math.max(1,state.phrase.split('\n').length);
+  let baseSz;
+  if(state.format==='feed')baseSz=lineCount<=2?38:lineCount===3?32:lineCount===4?26:lineCount===5?22:lineCount===6?19:17;
+  else if(state.format==='story')baseSz=lineCount<=2?42:lineCount===3?34:lineCount===4?28:lineCount===5?23:lineCount===6?20:17;
+  else baseSz=lineCount<=2?34:lineCount===3?28:lineCount===4?23:lineCount===5?19:lineCount===6?16:14;
+  ct.style.fontSize=baseSz+'px';
 }
 
 function randomize(){
@@ -380,177 +537,205 @@ function randomize(){
   const ic=icons[Math.floor(Math.random()*icons.length)];
   const b=Math.floor(Math.random()*backgrounds.length);
   state.phrase=p.text;state.icon=ic;state.bg=b;
+  if(state.source==='photo')setSource('preset');
   document.getElementById('phraseInput').value=p.text;
   document.querySelectorAll('#iconPicker .pick').forEach((x,i)=>x.classList.toggle('on',icons[i]===ic));
   document.querySelectorAll('#bgPicker .pick-bg').forEach((x,i)=>x.classList.toggle('on',i===b));
   render();
 }
 
-// ============== EXPORT — format-aware layout with 2x supersampling ==============
+// =================== EXPORT ===================
 function downloadCard(){
   const btn=document.getElementById('dlBtn');
   btn.disabled=true;btn.textContent='Rendering...';
   try{
     const dims=formatDims[state.format];
-    const SCALE=2; // 2x supersampling for crisp output
+    const SCALE=2;
     const W=dims.w*SCALE;
     const H=dims.h*SCALE;
     const canvas=document.createElement('canvas');
     canvas.width=W;canvas.height=H;
     const ctx=canvas.getContext('2d');
-    // Enable high-quality smoothing
     ctx.imageSmoothingEnabled=true;
     ctx.imageSmoothingQuality='high';
-    const bg=backgrounds[state.bg];
+    
     const img=new Image();
     
     img.onload=function(){
       try{
-        ctx.drawImage(img,0,0,W,H);
-        const grad=ctx.createLinearGradient(W*0.2,0,W*0.8,H);
-        const oc=parseOverlay(bg.overlay);
-        grad.addColorStop(0,oc[0]);grad.addColorStop(1,oc[1]);
-        ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+        // Draw background image with "cover" behavior
+        drawImageCover(ctx,img,W,H);
+        // Apply overlay
+        if(state.source==='photo'&&state.photoDataUrl){
+          const o=state.overlayStrength/100;
+          const grad=ctx.createLinearGradient(0,0,0,H);
+          grad.addColorStop(0,`rgba(0,0,0,${o*0.25})`);
+          grad.addColorStop(1,`rgba(0,0,0,${o*0.7})`);
+          ctx.fillStyle=grad;
+          ctx.fillRect(0,0,W,H);
+        }else{
+          const bg=backgrounds[state.bg];
+          const grad=ctx.createLinearGradient(W*0.2,0,W*0.8,H);
+          const oc=parseOverlay(bg.overlay);
+          grad.addColorStop(0,oc[0]);grad.addColorStop(1,oc[1]);
+          ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+        }
         drawText(ctx,W,H,SCALE);
         downscaleAndExport(canvas,dims.w,dims.h,btn);
-      }catch(err){console.error('Draw err:',err);btn.disabled=false;btn.textContent='↓ Download PNG';showToast('⚠️ '+err.message.slice(0,40));}
+      }catch(err){
+        console.error('Draw err:',err);
+        btn.disabled=false;btn.textContent='↓ Download HD PNG';
+        showToast('⚠️ '+err.message.slice(0,40),true);
+      }
     };
+    
     img.onerror=function(){
-      console.error('Img load err — using gradient-only fallback');
-      const gc=parseGradient(bg.grad);
-      const bgGrad=ctx.createLinearGradient(0,0,0,H);
-      bgGrad.addColorStop(0,gc[0]);bgGrad.addColorStop(1,gc[1]);
-      ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
-      const oc=parseOverlay(bg.overlay);
-      const og=ctx.createLinearGradient(W*0.2,0,W*0.8,H);
-      og.addColorStop(0,oc[0]);og.addColorStop(1,oc[1]);
-      ctx.fillStyle=og;ctx.fillRect(0,0,W,H);
+      console.error('Img load err — using gradient fallback');
+      if(state.source==='preset'){
+        const bg=backgrounds[state.bg];
+        const gc=parseGradient(bg.grad);
+        const bgGrad=ctx.createLinearGradient(0,0,0,H);
+        bgGrad.addColorStop(0,gc[0]);bgGrad.addColorStop(1,gc[1]);
+        ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
+        const oc=parseOverlay(bg.overlay);
+        const og=ctx.createLinearGradient(W*0.2,0,W*0.8,H);
+        og.addColorStop(0,oc[0]);og.addColorStop(1,oc[1]);
+        ctx.fillStyle=og;ctx.fillRect(0,0,W,H);
+      }else{
+        // Photo failed — show error
+        btn.disabled=false;btn.textContent='↓ Download HD PNG';
+        showToast('⚠️ Photo failed to load',true);
+        return;
+      }
       drawText(ctx,W,H,SCALE);
       downscaleAndExport(canvas,dims.w,dims.h,btn);
     };
     
-    // Inject high-res width/height into SVG before encoding for crisp rasterization
-    let svgWithDims=bg.svg;
-    if(!svgWithDims.match(/<svg[^>]*\swidth=/)){
-      svgWithDims=svgWithDims.replace('<svg ','<svg width="'+W+'" height="'+H+'" ');
+    if(state.source==='photo'&&state.photoDataUrl){
+      img.src=state.photoDataUrl;
+    }else{
+      const bg=backgrounds[state.bg];
+      let svgWithDims=bg.svg;
+      if(!svgWithDims.match(/<svg[^>]*\swidth=/)){
+        svgWithDims=svgWithDims.replace('<svg ','<svg width="'+W+'" height="'+H+'" ');
+      }
+      const base64=btoa(unescape(encodeURIComponent(svgWithDims)));
+      img.src='data:image/svg+xml;base64,'+base64;
     }
-    const base64=btoa(unescape(encodeURIComponent(svgWithDims)));
-    img.src='data:image/svg+xml;base64,'+base64;
-  }catch(err){console.error('Setup err:',err);btn.disabled=false;btn.textContent='↓ Download PNG';showToast('⚠️ '+err.message.slice(0,40));}
+  }catch(err){
+    console.error('Setup err:',err);
+    btn.disabled=false;btn.textContent='↓ Download HD PNG';
+    showToast('⚠️ '+err.message.slice(0,40),true);
+  }
 }
 
-// Downscale 2x canvas to target size for crisp export
+// Draw image with "cover" behavior — crop to fit, center
+function drawImageCover(ctx,img,W,H){
+  const imgRatio=img.width/img.height;
+  const canvasRatio=W/H;
+  let sx=0,sy=0,sw=img.width,sh=img.height;
+  if(imgRatio>canvasRatio){
+    // image wider than canvas — crop sides
+    sw=img.height*canvasRatio;
+    sx=(img.width-sw)/2;
+  }else{
+    // image taller than canvas — crop top/bottom
+    sh=img.width/canvasRatio;
+    sy=(img.height-sh)/2;
+  }
+  ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+}
+
 function downscaleAndExport(srcCanvas,targetW,targetH,btn){
-  // Two-step downscale for best quality (browsers do better with bilinear at 50% intervals)
-  const finalCanvas=document.createElement('canvas');
-  finalCanvas.width=targetW;
-  finalCanvas.height=targetH;
-  const fctx=finalCanvas.getContext('2d');
+  const final=document.createElement('canvas');
+  final.width=targetW;final.height=targetH;
+  const fctx=final.getContext('2d');
   fctx.imageSmoothingEnabled=true;
   fctx.imageSmoothingQuality='high';
   fctx.drawImage(srcCanvas,0,0,srcCanvas.width,srcCanvas.height,0,0,targetW,targetH);
-  exportPng(finalCanvas,btn);
+  exportPng(final,btn);
 }
 
 function drawText(ctx,W,H,SCALE){
   SCALE=SCALE||1;
-  // Padding & safe-zone offsets per format
   const padX=Math.round(W*0.07);
-  let topPad,bottomPad,centerY;
-  if(state.format==='story'){
-    topPad=Math.round(H*0.16);
-    bottomPad=Math.round(H*0.26);
-  }else if(state.format==='tiktok'){
-    topPad=Math.round(H*0.12);
-    bottomPad=Math.round(H*0.32);
-  }else{ // feed
-    topPad=Math.round(H*0.07);
-    bottomPad=Math.round(H*0.07);
-  }
+  let topPad,bottomPad;
+  if(state.format==='story'){topPad=Math.round(H*0.16);bottomPad=Math.round(H*0.26);}
+  else if(state.format==='tiktok'){topPad=Math.round(H*0.12);bottomPad=Math.round(H*0.32);}
+  else{topPad=Math.round(H*0.07);bottomPad=Math.round(H*0.07);}
   
-  // LOOP-YOU top-left
+  // LOOP-YOU
   ctx.fillStyle='#fff';
   ctx.font='900 '+Math.round(W*0.022)+'px Inter, Arial, sans-serif';
   ctx.textAlign='left';ctx.textBaseline='top';
-  // Lighter shadow for sharper text
-  ctx.shadowColor='rgba(0,0,0,0.45)';
-  ctx.shadowBlur=8*SCALE;
-  ctx.shadowOffsetY=2*SCALE;
+  ctx.shadowColor='rgba(0,0,0,0.5)';
+  ctx.shadowBlur=8*SCALE;ctx.shadowOffsetY=2*SCALE;
   ctx.fillText('L O O P - Y O U',padX,topPad);
   
-  // Icon top-right
+  // Icon
   const iconSize=Math.round(W*0.09);
   const iconX=W-padX-iconSize;
   const iconY=topPad-Math.round(iconSize*0.15);
-  ctx.shadowBlur=12*SCALE;
-  ctx.shadowOffsetY=4*SCALE;
+  ctx.shadowBlur=12*SCALE;ctx.shadowOffsetY=4*SCALE;
   ctx.fillStyle='rgba(255,255,255,0.92)';
   roundRect(ctx,iconX,iconY,iconSize,iconSize,iconSize*0.28);ctx.fill();
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
-  // Emoji - use larger system font stack
-  ctx.font=Math.round(iconSize*0.6)+'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif';
+  ctx.font=Math.round(iconSize*0.6)+'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#000';
   ctx.fillText(state.icon,iconX+iconSize/2,iconY+iconSize/2+iconSize*0.04);
   
-  // Main phrase
-  // Sharper shadow — less blur, more contrast
-  ctx.shadowColor='rgba(0,0,0,0.45)';
-  ctx.shadowBlur=14*SCALE;
-  ctx.shadowOffsetY=3*SCALE;
+  // Main phrase — RESPECT LINE BREAKS
+  ctx.shadowColor='rgba(0,0,0,0.5)';
+  ctx.shadowBlur=14*SCALE;ctx.shadowOffsetY=3*SCALE;
   ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='top';
   
   const availH=H-topPad-bottomPad-Math.round(W*0.05);
   const baseSize=Math.round(W*0.085);
-  const lines=state.phrase.split('\n').flatMap(l=>wrapText(ctx,l,W-padX*2,baseSize));
+  // Split by \n FIRST, then wrap each line only if too wide
+  const manualLines=state.phrase.split('\n');
+  const lines=manualLines.flatMap(l=>l===''?['']:wrapText(ctx,l,W-padX*2,baseSize));
   const fontSize=computeFontSize(W,lines);
   ctx.font='900 '+fontSize+'px Inter, Arial, sans-serif';
-  const lineH=fontSize*1.05;
+  const lineH=fontSize*1.08;
   const totalTextH=lines.length*lineH;
   
   let textStartY;
-  if(state.format==='feed'){
-    textStartY=(H-totalTextH)/2;
-  }else if(state.format==='tiktok'){
-    textStartY=topPad+Math.round(W*0.08)+(availH-totalTextH)*0.4;
-  }else{
-    textStartY=topPad+Math.round(W*0.08)+(availH-totalTextH)*0.5;
-  }
-  let y=textStartY;
-  lines.forEach(line=>{ctx.fillText(line.trim(),padX,y);y+=lineH;});
+  if(state.format==='feed'){textStartY=(H-totalTextH)/2;}
+  else if(state.format==='tiktok'){textStartY=topPad+Math.round(W*0.08)+(availH-totalTextH)*0.4;}
+  else{textStartY=topPad+Math.round(W*0.08)+(availH-totalTextH)*0.5;}
   
-  // Bottom label
-  ctx.shadowBlur=8*SCALE;
-  ctx.shadowOffsetY=2*SCALE;
+  let y=textStartY;
+  lines.forEach(line=>{
+    if(line!=='')ctx.fillText(line,padX,y);
+    y+=lineH;
+  });
+  
+  // Label
+  ctx.shadowBlur=8*SCALE;ctx.shadowOffsetY=2*SCALE;
   ctx.font='900 '+Math.round(W*0.022)+'px Inter, Arial, sans-serif';
   ctx.textBaseline='bottom';
   const labelSpaced=state.label.split('').join(' ').trim();
   let labelY;
-  if(state.format==='story'){
-    labelY=H-Math.round(H*0.24);
-  }else if(state.format==='tiktok'){
-    labelY=H-Math.round(H*0.30);
-  }else{
-    labelY=H-padX;
-  }
+  if(state.format==='story')labelY=H-Math.round(H*0.24);
+  else if(state.format==='tiktok')labelY=H-Math.round(H*0.30);
+  else labelY=H-padX;
   ctx.fillText(labelSpaced,padX,labelY);
-  // Reset shadow
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;
 }
 
 function exportPng(canvas,btn){
   const slug=state.phrase.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
   const fmt=state.format;
-  const filename=`loop-you-${fmt}-${slug||'vibe-card'}.png`;
+  const filename=`loop-you-${fmt}-${slug||'card'}.png`;
   if(canvas.toBlob){
-    // PNG is lossless — don't pass quality factor (it's only for JPEG/WebP)
     canvas.toBlob(function(blob){
       if(!blob){fallbackDownload(canvas,filename,btn);return;}
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');a.download=filename;a.href=url;
       document.body.appendChild(a);a.click();document.body.removeChild(a);
       setTimeout(()=>URL.revokeObjectURL(url),1000);
-      btn.disabled=false;btn.textContent='↓ Download PNG';
-      showToast('✓ '+fmt+' card saved (HD)');
+      btn.disabled=false;btn.textContent='↓ Download HD PNG';
+      showToast('✓ HD card saved');
     },'image/png');
   }else{fallbackDownload(canvas,filename,btn);}
 }
@@ -559,17 +744,20 @@ function fallbackDownload(canvas,filename,btn){
     const dataUrl=canvas.toDataURL('image/png');
     const a=document.createElement('a');a.download=filename;a.href=dataUrl;
     document.body.appendChild(a);a.click();document.body.removeChild(a);
-    btn.disabled=false;btn.textContent='↓ Download PNG';showToast('✓ Saved');
-  }catch(err){btn.disabled=false;btn.textContent='↓ Download PNG';showToast('⚠️ Long-press preview to save');}
+    btn.disabled=false;btn.textContent='↓ Download HD PNG';showToast('✓ Saved');
+  }catch(err){
+    btn.disabled=false;btn.textContent='↓ Download HD PNG';
+    showToast('⚠️ Long-press preview to save',true);
+  }
 }
 
-// ============== HELPERS ==============
+// =================== HELPERS ===================
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 function wrapText(ctx,text,maxWidth,baseSize){ctx.font='900 '+baseSize+'px Inter, Arial, sans-serif';const words=text.split(' ');const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else{line=test;}}if(line)lines.push(line);return lines;}
-function computeFontSize(W,lines){const base=W*0.085;if(lines.length<=2)return Math.round(base*1.15);if(lines.length===3)return Math.round(base*0.95);if(lines.length===4)return Math.round(base*0.78);if(lines.length===5)return Math.round(base*0.68);if(lines.length===6)return Math.round(base*0.60);if(lines.length===7)return Math.round(base*0.54);return Math.round(base*0.48);}
+function computeFontSize(W,lines){const base=W*0.085;const n=lines.length;if(n<=2)return Math.round(base*1.15);if(n===3)return Math.round(base*0.95);if(n===4)return Math.round(base*0.78);if(n===5)return Math.round(base*0.68);if(n===6)return Math.round(base*0.60);if(n===7)return Math.round(base*0.54);if(n===8)return Math.round(base*0.48);return Math.round(base*0.42);}
 function parseOverlay(grad){const m=grad.match(/rgba?\([^)]+\)/g);if(m&&m.length>=2)return [m[0],m[1]];return ['rgba(0,0,0,0.2)','rgba(0,0,0,0.4)'];}
 function parseGradient(grad){const m=grad.match(/#[0-9a-fA-F]{6}/g);if(m&&m.length>=2)return [m[0],m[1]];return ['#888','#444'];}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+function showToast(msg,isErr){const t=document.getElementById('toast');t.textContent=msg;t.classList.toggle('error',!!isErr);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 init();
 </script>
