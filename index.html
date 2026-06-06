@@ -199,7 +199,7 @@ body{padding:18px 14px 80px;background:radial-gradient(ellipse at top,#1c1a16 0%
     🎵 TikTok cover<small>1080 × 1920</small>
   </button>
   <button class="tab" data-format="feed" onclick="setFormat('feed',this)">
-    🟦 IG Feed<small>1080 × 1080</small>
+    🟦 IG Feed<small>1080 × 1350</small>
   </button>
 </div>
 
@@ -313,7 +313,7 @@ still showed up.</textarea>
 
 <p class="hint">
   <b>Loop-You · Vibe Card Generator</b> · ship one a day 🌿<br>
-  <span style="font-size:10.5px;opacity:.6">v6 · upload your own photo · multiline · HD export · safe zones</span>
+  <span style="font-size:10.5px;opacity:.6">v6 · upload your own photo · 4:5 IG feed · multiline · HD export</span>
 </p>
 
 <div class="toast" id="toast">✓ Card downloaded</div>
@@ -332,12 +332,12 @@ const state = {
   overlayStrength: 45    // 0-80 percent overlay darkness
 };
 
-const formatRatios = {story:'9/16',tiktok:'9/16',feed:'1/1'};
-const formatDims = {story:{w:1080,h:1920},tiktok:{w:1080,h:1920},feed:{w:1080,h:1080}};
+const formatRatios = {story:'9/16',tiktok:'9/16',feed:'4/5'};
+const formatDims = {story:{w:1080,h:1920},tiktok:{w:1080,h:1920},feed:{w:1080,h:1350}};
 const formatHelpers = {
   story:'<b>Story / Reel mode:</b> safe zones show what IG/TikTok UI hides. Keep text in middle.',
   tiktok:'<b>TikTok cover mode:</b> bottom 30% covered by buttons. Keep text high.',
-  feed:'<b>IG Feed mode:</b> full canvas usable. Square format for grid posts.'
+  feed:'<b>IG Feed mode:</b> 4:5 portrait (1080×1350) — fills more phone screen than square. Higher engagement.'
 };
 
 // =================== BACKGROUNDS ===================
@@ -526,7 +526,7 @@ function render(){
   // Auto-shrink preview font based on line count (split by \n)
   const lineCount=Math.max(1,state.phrase.split('\n').length);
   let baseSz;
-  if(state.format==='feed')baseSz=lineCount<=2?38:lineCount===3?32:lineCount===4?26:lineCount===5?22:lineCount===6?19:17;
+  if(state.format==='feed')baseSz=lineCount<=2?40:lineCount===3?34:lineCount===4?28:lineCount===5?23:lineCount===6?20:17;
   else if(state.format==='story')baseSz=lineCount<=2?42:lineCount===3?34:lineCount===4?28:lineCount===5?23:lineCount===6?20:17;
   else baseSz=lineCount<=2?34:lineCount===3?28:lineCount===4?23:lineCount===5?19:lineCount===6?16:14;
   ct.style.fontSize=baseSz+'px';
